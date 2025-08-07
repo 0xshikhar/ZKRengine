@@ -2,8 +2,8 @@ const proofService = require('../services/proof.service');
 const zkverifyService = require('../services/zkverify.service');
 const chainService = require('../services/chain.service');
 const entropyService = require('../services/entropy.service');
+const databaseService = require('../services/database.service');
 const logger = require('../utils/logger');
-const { Request, Proof } = require('../models');
 const { validationResult } = require('express-validator');
 
 class RandomnessController {
@@ -50,7 +50,7 @@ class RandomnessController {
             const requestId = this.generateRequestId();
 
             // Create request record
-            const request = await Request.create({
+            const request = await databaseService.createRequest({
                 requestId,
                 chainId,
                 seed,

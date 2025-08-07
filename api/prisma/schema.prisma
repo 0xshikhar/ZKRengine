@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Request {
+  id          String   @id @default(cuid())
+  requestId   String   @unique
+  chainId     Int
+  seed        String
+  requester   String
+  callbackAddress String?
+  status      String   @default("pending") // pending, processing, fulfilled, failed
+  feePaid     String?
+  randomValue String?
+  proofHash   String?
+  requestedAt DateTime @default(now())
+  fulfilledAt DateTime?
+  expiresAt   DateTime
+  processingTime Int?
+  error       String?
+  metadata    String? // JSON string for additional data
+
+  proof       Proof?
+
+  @@index([requester])
+  @@index([chainId])
+  @@index([status])
+  @@index([requestedAt])
+}
+
+model Proof {
+  id                String   @id @default(cuid())
+  requestId         String   @unique
+  chainId           Int
+  proofData         String   // JSON string of proof data
+  generationTime    Int?
+  verificationKeyHash String
+  proofHash         String?
+  randomValue       String?
+  verificationStatus String  @default("pending") // pending, verified, failed
+  zkVerifyStatus    String?  // JSON string of zkVerify submission status
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  request           Request  @relation(fields: [requestId], references: [requestId])
+
+  @@index([chainId])
+  @@index([verificationStatus])
+  @@index([createdAt])
+}
+
+model Chain {
+  id          String   @id @default(cuid())
+  chainId     Int      @unique
+  name        String
+  rpcUrl      String
+  currency    String
+  blockTime   Int
+  confirmations Int
+  healthy     Boolean  @default(true)
+  lastBlockNumber Int?
+  lastUpdate  DateTime?
+  totalRequests Int    @default(0)
+  fulfilledRequests Int @default(0)
+  failedRequests Int   @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([chainId])
+  @@index([healthy])
+}

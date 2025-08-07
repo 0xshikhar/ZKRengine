@@ -4,7 +4,7 @@ const zkverifyService = require('./zkverify.service');
 const chainService = require('./chain.service');
 const entropyService = require('./entropy.service');
 const logger = require('../utils/logger');
-const { Request, Proof } = require('../models');
+const databaseService = require('./database.service');
 
 class RelayerService {
     constructor() {
@@ -299,14 +299,11 @@ class RelayerService {
 
         try {
             // Check if request already exists
-            let request = await Request.findOne({ 
-                requestId: `${chainId}-${requestId}`,
-                chainId 
-            });
+            let request = await databaseService.findRequest(`${chainId}-${requestId}`);
 
             if (!request) {
                 // Create new request
-                request = await Request.create({
+                request = await databaseService.createRequest({
                     requestId: `${chainId}-${requestId}`,
                     chainId,
                     seed,
@@ -327,10 +324,10 @@ class RelayerService {
                 });
             } else {
                 // Update existing request
-                await request.updateOne({
+                await databaseService.updateRequest(request.requestId, {
                     status: 'processing',
                     metadata: {
-                        ...request.metadata,
+                        ...JSON.parse(request.metadata || '{}'),
                         transactionHash,
                         reprocessedAt: new Date()
                     }
@@ -376,10 +373,10 @@ class RelayerService {
             });
 
             // Create proof record
-            const proof = await Proof.create({
+            const proof = await databaseService.createProof({
                 requestId: fullRequestId,
                 chainId,
-                proofData,
+                proofData: JSON.stringify(proofData),
                 verificationKeyHash: process.env.VERIFICATION_KEY_HASH
             });
 
@@ -393,14 +390,11 @@ class RelayerService {
             await this.fulfillOnChain(chainId, requestId, proofData);
 
             // Update request as fulfilled
-            await Request.updateOne(
-                { requestId: fullRequestId },
-                {
-                    status: 'fulfilled',
-                    randomValue: proofData.publicSignals[0],
-                    proofHash: proof.proofHash,
-                    fulfilledAt: new Date()
-                }
+            await databaseService.markRequestAsFulfilled(
+                fullRequestId,
+                proofData.publicSignals[0],
+                proof.proofHash,
+                Date.now() - this.processingQueue.get(`${chainId}-${requestId}`).startedAt
             );
 
             // Remove from processing queue
@@ -419,17 +413,7 @@ class RelayerService {
             });
 
             // Mark request as failed
-            await Request.updateOne(
-                { requestId: fullRequestId },
-                {
-                    status: 'failed',
-                    error: {
-                        message: error.message,
-                        stack: error.stack,
-                        failedAt: new Date()
-                    }
-                }
-            );
+            await databaseService.markRequestAsFailed(fullRequestId, error.message);
 
             throw error;
         }
@@ -514,10 +498,13 @@ class RelayerService {
      */
     async processPendingRequests() {
         try {
-            const pendingRequests = await Request.find({
-                status: 'pending',
-                expiresAt: { $gt: new Date() }
-            }).limit(10);
+            const pendingRequests = await databaseService.prisma.request.findMany({
+                where: {
+                    status: 'pending',
+                    expiresAt: { gt: new Date() }
+                },
+                take: 10
+            });
 
             for (const request of pendingRequests) {
                 const processingKey = `${request.chainId}-${request.metadata?.onChainRequestId}`;

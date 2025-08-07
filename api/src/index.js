@@ -6,8 +6,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const logger = require('./utils/logger');
-const { connectDatabase } = require('./config/database.config');
-const { connectRedis } = require('./config/redis.config');
+const databaseService = require('./services/database.service');
 const routes = require('./routes');
 const { errorHandler, notFound } = require('./middleware/error.middleware');
 
@@ -130,9 +129,8 @@ class ZKRandomAPI {
 
     async start() {
         try {
-            // Connect to databases
-            await connectDatabase();
-            await connectRedis();
+            // Initialize database
+            await databaseService.initialize();
 
             // Start server
             this.server = this.app.listen(this.port, () => {
@@ -169,23 +167,10 @@ class ZKRandomAPI {
 
         // Close database connections
         try {
-            const mongoose = require('mongoose');
-            await mongoose.connection.close();
+            await databaseService.disconnect();
             logger.info('Database connection closed');
         } catch (error) {
             logger.error('Error closing database:', error);
-        }
-
-        // Close Redis connection
-        try {
-            const { getRedisClient } = require('./config/redis.config');
-            const redisClient = getRedisClient();
-            if (redisClient) {
-                await redisClient.quit();
-                logger.info('Redis connection closed');
-            }
-        } catch (error) {
-            logger.error('Error closing Redis:', error);
         }
 
         logger.info('Graceful shutdown completed');

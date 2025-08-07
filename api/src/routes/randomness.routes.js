@@ -9,44 +9,10 @@ const router = express.Router();
 // Request randomness
 router.post('/request',
     // Rate limiting
-    rateLimitMiddleware.randomnessRequest,
+    rateLimitMiddleware.randomnessLimiter,
 
     // Input validation
-    [
-        body('chainId')
-            .isInt({ min: 1 })
-            .withMessage('Chain ID must be a positive integer'),
-
-        body('seed')
-            .matches(/^0x[a-fA-F0-9]{64}$/)
-            .withMessage('Seed must be a valid 32-byte hex string'),
-
-        body('requester')
-            .matches(/^0x[a-fA-F0-9]{40}$/)
-            .withMessage('Requester must be a valid Ethereum address'),
-
-        body('callbackAddress')
-            .optional()
-            .matches(/^0x[a-fA-F0-9]{40}$/)
-            .withMessage('Callback address must be a valid Ethereum address'),
-
-        body('feePaid')
-            .optional()
-            .isNumeric()
-            .withMessage('Fee paid must be a number'),
-
-        body('gasPrice')
-            .optional()
-            .isNumeric()
-            .withMessage('Gas price must be a number'),
-
-        body('blockNumber')
-            .optional()
-            .isInt({ min: 0 })
-            .withMessage('Block number must be a non-negative integer')
-    ],
-
-    // Validation error handler
+    validationMiddleware.validateRandomnessRequest,
     validationMiddleware.handleValidationErrors,
 
     // Controller
@@ -56,12 +22,7 @@ router.post('/request',
 // Get request status
 router.get('/request/:requestId',
     // Input validation
-    [
-        param('requestId')
-            .matches(/^req_[0-9]+_[a-z0-9]+$/)
-            .withMessage('Invalid request ID format')
-    ],
-
+    validationMiddleware.validateRequestStatus,
     validationMiddleware.handleValidationErrors,
     randomnessController.getRequestStatus
 );
@@ -69,35 +30,10 @@ router.get('/request/:requestId',
 // Get user requests
 router.get('/user/:address',
     // Rate limiting
-    rateLimitMiddleware.userRequests,
+    rateLimitMiddleware.apiLimiter,
 
     // Input validation
-    [
-        param('address')
-            .matches(/^0x[a-fA-F0-9]{40}$/)
-            .withMessage('Address must be a valid Ethereum address'),
-
-        query('page')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage('Page must be a positive integer'),
-
-        query('limit')
-            .optional()
-            .isInt({ min: 1, max: 100 })
-            .withMessage('Limit must be between 1 and 100'),
-
-        query('status')
-            .optional()
-            .isIn(['pending', 'processing', 'fulfilled', 'failed', 'expired'])
-            .withMessage('Invalid status value'),
-
-        query('chainId')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage('Chain ID must be a positive integer')
-    ],
-
+    validationMiddleware.validateUserRequests,
     validationMiddleware.handleValidationErrors,
     randomnessController.getUserRequests
 );
@@ -105,23 +41,16 @@ router.get('/user/:address',
 // Get statistics
 router.get('/statistics',
     // Rate limiting
-    rateLimitMiddleware.statistics,
+    rateLimitMiddleware.apiLimiter,
 
     // Input validation
-    [
-        query('timeRange')
-            .optional()
-            .isIn(['1h', '24h', '7d', '30d'])
-            .withMessage('Time range must be one of: 1h, 24h, 7d, 30d')
-    ],
-
     validationMiddleware.handleValidationErrors,
     randomnessController.getStatistics
 );
 
 // Get supported chains
 router.get('/chains',
-    rateLimitMiddleware.general,
+    rateLimitMiddleware.apiLimiter,
     async (req, res) => {
         try {
             const chainService = require('../services/chain.service');
@@ -209,7 +138,7 @@ router.get('/chains/:chainId',
 // Test randomness generation (development only)
 if (process.env.NODE_ENV === 'development') {
     router.post('/test',
-        rateLimitMiddleware.test,
+        rateLimitMiddleware.proofLimiter,
         async (req, res) => {
             try {
                 const proofService = require('../services/proof.service');

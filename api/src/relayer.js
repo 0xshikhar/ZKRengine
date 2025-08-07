@@ -8,6 +8,7 @@
 require('dotenv').config();
 const logger = require('./utils/logger');
 const relayerService = require('./services/relayer.service');
+const databaseService = require('./services/database.service');
 
 // Handle process termination gracefully
 process.on('SIGINT', async () => {
@@ -32,6 +33,7 @@ process.on('uncaughtException', (error) => {
 async function shutdown() {
     try {
         await relayerService.stop();
+        await databaseService.disconnect();
         logger.info('✅ Relayer service stopped successfully');
         process.exit(0);
     } catch (error) {
@@ -48,7 +50,7 @@ async function main() {
         const requiredEnvVars = [
             'PRIVATE_KEY',
             'VERIFICATION_KEY_HASH',
-            'MONGODB_URI'
+            'DATABASE_URL'
         ];
 
         const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
@@ -56,6 +58,9 @@ async function main() {
             throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
         }
 
+        // Initialize database
+        await databaseService.initialize();
+        
         // Start the relayer service
         await relayerService.start();
         
