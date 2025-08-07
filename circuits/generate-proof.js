@@ -137,6 +137,7 @@ if (require.main === module) {
                 }, null, 2));
 
                 console.log(`📁 Proof saved to: ${outputPath}`);
+                console.log("✅ Test completed successfully!");
             }
 
         } catch (error) {
@@ -145,7 +146,13 @@ if (require.main === module) {
         }
     }
 
-    main();
+    main().then(() => {
+        console.log("🎉 Proof generation test finished!");
+        process.exit(0);
+    }).catch(error => {
+        console.error("❌ Fatal error:", error);
+        process.exit(1);
+    });
 }
 
 module.exports = ProofGenerator;
