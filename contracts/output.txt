@@ -1,0 +1,123 @@
+npx hardhat run deploy/deploy-full-system.ts --network base-sepolia
+
+Deploying full ZKRandom system with account: 0x1B4AcaBA13f8B3B858c0796A7d62FC35A5ED3BA5
+Current gas price: 0.001000097 gwei
+Using increased gas price: 0.001200116 gwei
+
+=== Step 1: Deploying Verifier Contract ===
+✅ Verifier deployed to: 0x6449bD146B3378FbB014655F362f399B7393B698
+
+=== Step 2: Registering Verification Key ===
+✅ Verification key registered with hash: 0xe8d96e296467e27ab343e44243d3b6f283ff735d2762f8fe567b2ce8fc933dd7
+
+=== Step 3: Configuring Verifier Settings ===
+✅ Verification timeout updated
+✅ Max proof size updated
+✅ Min proof size updated
+✅ Verifier configuration completed
+
+=== Step 4: Deploying ZKRandomOracle Contract ===
+✅ ZKRandomOracle deployed to: 0x09dDF8f56981deC60e468e2B85194102a3e2E124
+
+=== Step 5: Configuring Oracle Settings ===
+✅ Request fee updated
+✅ Max requests per block updated
+✅ Request timeout updated
+⚠️ Relayer authorization set underpriced, retrying with higher gas...
+⚠️ Manual retry needed for: Relayer authorization set
+✅ Oracle configuration completed
+
+=== Deployment Summary ===
+🔗 Verifier Contract: 0x6449bD146B3378FbB014655F362f399B7393B698
+🔗 Oracle Contract: 0x09dDF8f56981deC60e468e2B85194102a3e2E124
+🔑 Verification Key Hash: 0xe8d96e296467e27ab343e44243d3b6f283ff735d2762f8fe567b2ce8fc933dd7
+👤 Deployer: 0x1B4AcaBA13f8B3B858c0796A7d62FC35A5ED3BA5
+💰 Request Fee: 0.001 ETH
+⏱️ Request Timeout: 1 hour
+📊 Max Requests per Block: 10
+
+=== Environment Variables ===
+export VERIFIER_ADDRESS=0x6449bD146B3378FbB014655F362f399B7393B698
+export ORACLE_ADDRESS=0x09dDF8f56981deC60e468e2B85194102a3e2E124
+export VERIFICATION_KEY_HASH=0xe8d96e296467e27ab343e44243d3b6f283ff735d2762f8fe567b2ce8fc933dd7
+
+🎉 Deployment completed successfully!
+Deployment info: {
+  "network": "base-sepolia",
+  "deployer": "0x1B4AcaBA13f8B3B858c0796A7d62FC35A5ED3BA5",
+  "contracts": {
+    "verifier": "0x6449bD146B3378FbB014655F362f399B7393B698",
+    "oracle": "0x09dDF8f56981deC60e468e2B85194102a3e2E124"
+  },
+  "configuration": {
+    "verificationKeyHash": "0xe8d96e296467e27ab343e44243d3b6f283ff735d2762f8fe567b2ce8fc933dd7",
+    "requestFee": "0.001 ETH",
+    "requestTimeout": "1 hour",
+    "maxRequestsPerBlock": 10,
+    "verificationTimeout": "1 hour",
+    "maxProofSize": 1000,
+    "minProofSize": 10
+  },
+  "deployedAt": "2025-08-07T09:07:29.554Z"
+}
+➜  contracts git:(master) ✗ npx hardhat run test-deployed-system.ts --network base-sepolia
+Testing deployed ZKRandom system with account: 0x1B4AcaBA13f8B3B858c0796A7d62FC35A5ED3BA5
+
+=== Testing Deployed Contracts ===
+
+--- Test 1: Verifier Contract ---
+✅ Verifier owner: 0xb4beF264785fd51D80347f578E0245fCcdF3C055
+✅ Verification timeout: 3600
+✅ Max proof size: 1000
+✅ Verification key registered: false
+
+--- Test 2: Oracle Contract ---
+✅ ZKVerify address: 0xE5c0812bAD2B6B84194F657411aD65b4aa1FfD1D
+✅ Request fee: 0.001 ETH
+✅ Max requests per block: 10
+✅ Request timeout: 3600
+✅ Deployer is relayer: false
+
+--- Test 3: Randomness Request Test ---
+📝 Requesting randomness with seed: 0xcdf0290092c3003b14d067d00311608d9e670241743d4848183dca9619baa70e
+✅ Randomness request submitted, tx hash: 0xc522a740f5dd1f62b77952b35206c879a4dcec699343019544fe38970df639aa
+✅ Transaction confirmed in block: 29394719
+✅ Request ID: 2
+
+--- Test 4: System Statistics ---
+📊 Total requests: 2
+📊 Fulfilled requests: 0
+📊 Pending requests: 2
+📊 Current fee: 0.001 ETH
+
+🎉 System testing completed!
+
+
+
+
+
+
+
+npx hardhat run scripts/quick-deploy.ts --network sepolia
+Quick deployment for account: 0x1B4AcaBA13f8B3B858c0796A7d62FC35A5ED3BA5
+Using high gas price: 0.003417621 gwei
+
+=== Step 1: Deploying Verifier Contract ===
+✅ Verifier deployed to: 0xB5039eC53802fbBE81a64c2730E053D04Fe7103E
+
+=== Step 2: Registering Verification Key ===
+✅ Verification key registered with hash: 0x7ce2497ea7706bbef937f2e327f27dd16d9e717415a6c7e96a3c9f1ef0129d92
+
+=== Step 3: Deploying Oracle Contract ===
+✅ Oracle deployed to: 0x469445050449551213fd0b3aC9Ca33fc7cC55d1C
+
+=== Deployment Summary ===
+🔗 Verifier: 0xB5039eC53802fbBE81a64c2730E053D04Fe7103E
+🔗 Oracle: 0x469445050449551213fd0b3aC9Ca33fc7cC55d1C
+🔑 Key Hash: 0x7ce2497ea7706bbef937f2e327f27dd16d9e717415a6c7e96a3c9f1ef0129d92
+⛽ Gas Price: 0.003417621 gwei
+
+=== Environment Variables ===
+export VERIFIER_ADDRESS=0xB5039eC53802fbBE81a64c2730E053D04Fe7103E
+export ORACLE_ADDRESS=0x469445050449551213fd0b3aC9Ca33fc7cC55d1C
+export VERIFICATION_KEY_HASH=0x7ce2497ea7706bbef937f2e327f27dd16d9e717415a6c7e96a3c9f1ef0129d92

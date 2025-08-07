@@ -1,0 +1,27 @@
+{
+    "name": "zkrandom-circuits",
+    "version": "1.0.0",
+    "description": "Circom circuits for ZK randomness generation",
+    "scripts": {
+        "compile": "./compile.sh",
+        "generate-proof": "bun run generate-proof.js",
+        "verify-proof": "bun run verify-proof.js",
+        "setup": "bun run compile && bun run generate-proof",
+        "test": "bun run test-circuit.js",
+        "build": "bun run compile",
+        "dev": "bun run compile"
+    },
+    "dependencies": {
+        "circomlib": "^2.0.5",
+        "ffjavascript": "^0.2.60",
+        "snarkjs": "^0.7.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.5.4",
+        "chai": "^4.3.8",
+        "circom_tester": "^0.0.19"
+    },
+    "overrides": {
+        "circom": "2.1.6"
+    }
+}

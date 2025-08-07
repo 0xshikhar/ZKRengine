@@ -1,0 +1,44 @@
+{
+    "name": "zkrandom-api",
+    "version": "1.0.0",
+    "description": "REST API for ZKRandom engine",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "bun run src/index.js",
+        "dev": "bun --watch src/index.js",
+        "relayer": "bun run src/relayer.js",
+        "relayer:dev": "bun --watch src/relayer.js",
+        "test": "bun test",
+        "test:watch": "bun test --watch",
+        "lint": "eslint src/",
+        "lint:fix": "eslint src/ --fix",
+        "build": "echo 'API is interpreted, no build step needed'",
+        "compile": "echo 'API is interpreted, no compile step needed'"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "helmet": "^7.0.0",
+        "dotenv": "^16.3.1",
+        "axios": "^1.5.0",
+        "ethers": "^6.7.1",
+        "snarkjs": "^0.7.0",
+        "mongoose": "^7.5.0",
+        "redis": "^4.6.8",
+        "winston": "^3.10.0",
+        "express-rate-limit": "^6.10.0",
+        "joi": "^17.9.2",
+        "jsonwebtoken": "^9.0.2",
+        "bcryptjs": "^2.4.3",
+        "node-cron": "^3.0.2",
+        "express-validator": "^7.0.1",
+        "compression": "^1.7.4",
+        "morgan": "^1.10.0"
+    },
+    "devDependencies": {
+        "jest": "^29.6.4",
+        "supertest": "^6.3.3",
+        "eslint": "^8.47.0",
+        "@types/node": "^20.5.4"
+    }
+}

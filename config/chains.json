@@ -1,0 +1,144 @@
+{
+    "supportedChains": {
+        "8453": {
+            "name": "Base Mainnet",
+            "symbol": "ETH",
+            "rpcUrl": "https://mainnet.base.org",
+            "fallbackRpcUrls": [
+                "https://base-mainnet.infura.io/v3/${INFURA_PROJECT_ID}",
+                "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+            ],
+            "zkVerifyAddress": "0x0000000000000000000000000000000000000000",
+            "oracleAddress": "0x0000000000000000000000000000000000000000",
+            "gasPrice": "0.1",
+            "maxGasPrice": "2.0",
+            "gasLimit": 500000,
+            "confirmations": 3,
+            "blockTime": 2,
+            "isMainnet": true,
+            "requestFee": "1000000000000000",
+            "rateLimitPerHour": 1000,
+            "rateLimitPerDay": 10000,
+            "explorerUrl": "https://basescan.org",
+            "metadata": {
+                "nativeCurrency": {
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "decimals": 18
+                },
+                "description": "Base is a secure, low-cost, builder-friendly Ethereum L2",
+                "website": "https://base.org",
+                "documentation": "https://docs.base.org"
+            }
+        },
+        "84532": {
+            "name": "Base Sepolia",
+            "symbol": "ETH",
+            "rpcUrl": "https://sepolia.base.org",
+            "fallbackRpcUrls": [
+                "https://base-sepolia.infura.io/v3/${INFURA_PROJECT_ID}",
+                "https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+            ],
+            "zkVerifyAddress": "0x0000000000000000000000000000000000000000",
+            "oracleAddress": "0x0000000000000000000000000000000000000000",
+            "gasPrice": "0.05",
+            "maxGasPrice": "1.0",
+            "gasLimit": 500000,
+            "confirmations": 1,
+            "blockTime": 2,
+            "isMainnet": false,
+            "requestFee": "100000000000000",
+            "rateLimitPerHour": 2000,
+            "rateLimitPerDay": 20000,
+            "explorerUrl": "https://sepolia.basescan.org",
+            "metadata": {
+                "nativeCurrency": {
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "decimals": 18
+                },
+                "description": "Base Sepolia testnet",
+                "website": "https://base.org",
+                "documentation": "https://docs.base.org"
+            }
+        },
+        "1": {
+            "name": "Ethereum Mainnet",
+            "symbol": "ETH",
+            "rpcUrl": "https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}",
+            "fallbackRpcUrls": [
+                "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
+                "https://ethereum.publicnode.com"
+            ],
+            "zkVerifyAddress": "0x0000000000000000000000000000000000000000",
+            "oracleAddress": "0x0000000000000000000000000000000000000000",
+            "gasPrice": "20",
+            "maxGasPrice": "100",
+            "gasLimit": 500000,
+            "confirmations": 12,
+            "blockTime": 12,
+            "isMainnet": true,
+            "requestFee": "5000000000000000",
+            "rateLimitPerHour": 500,
+            "rateLimitPerDay": 5000,
+            "explorerUrl": "https://etherscan.io",
+            "metadata": {
+                "nativeCurrency": {
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "decimals": 18
+                },
+                "description": "Ethereum Mainnet",
+                "website": "https://ethereum.org",
+                "documentation": "https://ethereum.org/developers"
+            }
+        },
+        "137": {
+            "name": "Polygon Mainnet",
+            "symbol": "MATIC",
+            "rpcUrl": "https://polygon-rpc.com",
+            "fallbackRpcUrls": [
+                "https://polygon-mainnet.infura.io/v3/${INFURA_PROJECT_ID}",
+                "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+            ],
+            "zkVerifyAddress": "0x0000000000000000000000000000000000000000",
+            "oracleAddress": "0x0000000000000000000000000000000000000000",
+            "gasPrice": "30",
+            "maxGasPrice": "200",
+            "gasLimit": 500000,
+            "confirmations": 5,
+            "blockTime": 2,
+            "isMainnet": true,
+            "requestFee": "10000000000000000",
+            "rateLimitPerHour": 1500,
+            "rateLimitPerDay": 15000,
+            "explorerUrl": "https://polygonscan.com",
+            "metadata": {
+                "nativeCurrency": {
+                    "name": "Polygon",
+                    "symbol": "MATIC",
+                    "decimals": 18
+                },
+                "description": "Polygon is a decentralized platform that provides tools and infrastructure for developers to build scalable DApps",
+                "website": "https://polygon.technology",
+                "documentation": "https://docs.polygon.technology"
+            }
+        }
+    },
+    "relayerConfig": {
+        "baseUrl": "https://relayer.zkverify.io",
+        "apiKey": "${RELAYER_API_KEY}",
+        "timeout": 30000,
+        "retries": 3,
+        "backoffMultiplier": 2,
+        "maxBackoffTime": 30000
+    },
+    "defaultSettings": {
+        "requestTimeout": 3600,
+        "maxRequestsPerBlock": 10,
+        "defaultConfirmations": 3,
+        "defaultGasLimit": 500000,
+        "healthCheckInterval": 60000,
+        "rateLimitWindow": 3600000
+    }
+}

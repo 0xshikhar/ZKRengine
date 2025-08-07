@@ -1,0 +1,132 @@
+{
+    "circuits": {
+        "randomness": {
+            "name": "ZKRandom Randomness Circuit",
+            "version": "1.0.0",
+            "description": "Circuit for generating verifiable randomness with entropy mixing",
+            "inputCount": 5,
+            "outputCount": 2,
+            "constraintCount": 1000,
+            "inputs": {
+                "public": [
+                    {
+                        "name": "blockHash",
+                        "type": "field",
+                        "description": "Latest block hash from target chain"
+                    },
+                    {
+                        "name": "nonce",
+                        "type": "field",
+                        "description": "Sequential nonce for uniqueness"
+                    },
+                    {
+                        "name": "timestamp",
+                        "type": "field",
+                        "description": "Request timestamp"
+                    }
+                ],
+                "private": [
+                    {
+                        "name": "entropy",
+                        "type": "field",
+                        "description": "Private entropy source"
+                    },
+                    {
+                        "name": "salt",
+                        "type": "field",
+                        "description": "Random salt for additional security"
+                    }
+                ]
+            },
+            "outputs": [
+                {
+                    "name": "randomValue",
+                    "type": "field",
+                    "description": "Generated random value"
+                },
+                {
+                    "name": "proof",
+                    "type": "field",
+                    "description": "Proof of computation integrity"
+                }
+            ],
+            "files": {
+                "source": "circuits/randomness.circom",
+                "r1cs": "circuits/build/randomness.r1cs",
+                "wasm": "circuits/build/randomness_js/randomness.wasm",
+                "zkey": "circuits/build/randomness_0001.zkey",
+                "vkey": "circuits/build/verification_key.json",
+                "solidityVerifier": "contracts/Verifier.sol"
+            },
+            "compilation": {
+                "compiler": "circom",
+                "version": "2.0.0",
+                "optimization": true,
+                "include": [
+                    "circomlib"
+                ]
+            },
+            "setup": {
+                "ceremony": "powers_of_tau_28",
+                "ptauFile": "powersOfTau28_hez_final_15.ptau",
+                "contributions": 1,
+                "trusted": false
+            },
+            "performance": {
+                "expectedProofTime": "5-15 seconds",
+                "expectedVerificationTime": "10-50 milliseconds",
+                "memoryUsage": "~500MB",
+                "proofSize": "~256 bytes"
+            }
+        }
+    },
+    "dependencies": {
+        "circom": "^2.0.0",
+        "snarkjs": "^0.7.0",
+        "circomlib": "^2.0.5"
+    },
+    "buildSettings": {
+        "outputDir": "circuits/build",
+        "wasmDir": "circuits/build/randomness_js",
+        "cleanBuild": true,
+        "parallelBuild": true,
+        "optimization": {
+            "enabled": true,
+            "runs": 200
+        }
+    },
+    "verification": {
+        "protocol": "groth16",
+        "curve": "bn128",
+        "fieldSize": "21888242871839275222246405745257275088548364400416034343698204186575808495617",
+        "securityLevel": 128
+    },
+    "testing": {
+        "testVectors": [
+            {
+                "name": "basic_randomness",
+                "inputs": {
+                    "blockHash": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+                    "nonce": "1",
+                    "timestamp": "1700000000",
+                    "entropy": "12345678901234567890",
+                    "salt": "98765432109876543210"
+                },
+                "expectedOutputs": {
+                    "randomValue": "computed_at_runtime",
+                    "proof": "computed_at_runtime"
+                }
+            }
+        ],
+        "benchmarks": {
+            "proofGeneration": {
+                "iterations": 10,
+                "warmupRuns": 2
+            },
+            "verification": {
+                "iterations": 100,
+                "warmupRuns": 10
+            }
+        }
+    }
+}

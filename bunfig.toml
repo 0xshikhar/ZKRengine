@@ -1,0 +1,20 @@
+[install]
+# Use exact versions for reproducible builds
+exact = true
+
+[install.scopes]
+# Configure workspace scopes
+"@zkrandom" = { registry = "https://registry.npmjs.org/" }
+
+[test]
+# Configure test environment
+preload = ["./test-setup.js"]
+
+[run]
+# Configure runtime environment
+bun = true
+node_modules = true
+
+[install.cache]
+# Configure caching
+dir = ".bun" 

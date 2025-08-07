@@ -1,0 +1,183 @@
+{
+    "networks": {
+        "base-mainnet": {
+            "chainId": 8453,
+            "rpc": "https://mainnet.base.org",
+            "gasPrice": "0.1",
+            "gasLimit": 5000000,
+            "confirmations": 3,
+            "contracts": {
+                "ZKRandomOracle": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                },
+                "ZKRandomConsumer": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                }
+            }
+        },
+        "base-sepolia": {
+            "chainId": 84532,
+            "rpc": "https://sepolia.base.org",
+            "gasPrice": "0.05",
+            "gasLimit": 5000000,
+            "confirmations": 1,
+            "contracts": {
+                "ZKRandomOracle": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                },
+                "ZKRandomConsumer": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                }
+            }
+        },
+        "ethereum": {
+            "chainId": 1,
+            "rpc": "https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}",
+            "gasPrice": "20",
+            "gasLimit": 5000000,
+            "confirmations": 12,
+            "contracts": {
+                "ZKRandomOracle": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                },
+                "ZKRandomConsumer": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                }
+            }
+        },
+        "polygon": {
+            "chainId": 137,
+            "rpc": "https://polygon-rpc.com",
+            "gasPrice": "30",
+            "gasLimit": 5000000,
+            "confirmations": 5,
+            "contracts": {
+                "ZKRandomOracle": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                },
+                "ZKRandomConsumer": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "deploymentTx": "",
+                    "blockNumber": 0,
+                    "deployedAt": "",
+                    "verified": false
+                }
+            }
+        }
+    },
+    "constructorArgs": {
+        "ZKRandomOracle": {
+            "zkVerifyAddress": "0x0000000000000000000000000000000000000000",
+            "verificationKeyHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "owner": "${DEPLOYER_ADDRESS}"
+        },
+        "ZKRandomConsumer": {
+            "zkRandomOracle": "${ZKRandomOracle_ADDRESS}"
+        }
+    },
+    "verification": {
+        "etherscan": {
+            "apiKeys": {
+                "1": "${ETHERSCAN_API_KEY}",
+                "137": "${POLYGONSCAN_API_KEY}",
+                "8453": "${BASESCAN_API_KEY}",
+                "84532": "${BASESCAN_API_KEY}"
+            }
+        },
+        "sourcify": {
+            "enabled": true,
+            "serverUrl": "https://sourcify.dev/server"
+        }
+    },
+    "postDeployment": {
+        "tasks": [
+            "registerVerificationKey",
+            "setInitialRelayers",
+            "configureRateLimits",
+            "verifyContracts",
+            "updateChainConfig"
+        ],
+        "relayers": [
+            "${RELAYER_ADDRESS_1}",
+            "${RELAYER_ADDRESS_2}"
+        ],
+        "rateLimits": {
+            "requestsPerHour": 1000,
+            "requestsPerDay": 10000
+        }
+    },
+    "monitoring": {
+        "healthChecks": {
+            "interval": 300000,
+            "endpoints": [
+                "/health",
+                "/api/v1/health"
+            ]
+        },
+        "alerts": {
+            "failureThreshold": 3,
+            "notificationChannels": [
+                "slack",
+                "email"
+            ]
+        },
+        "metrics": {
+            "enabled": true,
+            "port": 9090,
+            "path": "/metrics"
+        }
+    },
+    "backup": {
+        "privateKeys": {
+            "encrypted": true,
+            "storage": "secure_vault"
+        },
+        "deploymentData": {
+            "retention": "1 year",
+            "backup_interval": "daily"
+        }
+    },
+    "security": {
+        "multisig": {
+            "enabled": true,
+            "threshold": 2,
+            "signers": [
+                "${MULTISIG_SIGNER_1}",
+                "${MULTISIG_SIGNER_2}",
+                "${MULTISIG_SIGNER_3}"
+            ]
+        },
+        "timelock": {
+            "enabled": true,
+            "delay": 86400
+        }
+    }
+}

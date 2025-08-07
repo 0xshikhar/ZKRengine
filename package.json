@@ -1,0 +1,85 @@
+{
+  "name": "zkrandom-engine",
+  "version": "1.0.0",
+  "description": "Multi-chain ZK proof-based randomness oracle using Horizen zkVerify",
+  "private": true,
+  "author": "OxShikhar",
+  "license": "MIT",
+  "packageManager": "bun@1.0.0",
+  "workspaces": [
+    "api",
+    "nextjs",
+    "circuits"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd nextjs dev",
+    "build": "bun run --cwd nextjs build",
+    "start": "bun run --cwd nextjs start",
+    "api:dev": "bun run --cwd api dev",
+    "api:start": "bun run --cwd api start",
+    "api:test": "bun run --cwd api test",
+    "circuits:compile": "bun run --cwd circuits compile",
+    "circuits:test": "bun run --cwd circuits test",
+    "test": "bun run test:unit && bun run test:integration",
+    "test:unit": "bun run --cwd api test && bun run --cwd nextjs test",
+    "test:integration": "bun run scripts/test-integration.js",
+    "test:e2e": "bun run scripts/test-e2e.js",
+    "lint": "bun run --cwd api lint && bun run --cwd nextjs lint",
+    "format": "bun run --cwd api format && bun run --cwd nextjs format",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "setup": "bun run setup:env && bun run setup:install && bun run setup:compile",
+    "setup:env": "bun run scripts/setup-environment.js",
+    "setup:install": "bun install && bun install --cwd api && bun install --cwd nextjs && bun install --cwd circuits",
+    "setup:compile": "bun run circuits:compile",
+    "deploy:testnet": "cd contract && bun run deploy --network baseSepolia",
+    "deploy:mainnet": "cd contract && bun run deploy --network base",
+    "health": "bun run scripts/simple-health.js",
+    "monitor": "docker-compose up -d prometheus grafana",
+    "clean": "rm -rf node_modules && rm -rf api/node_modules && rm -rf nextjs/node_modules && rm -rf circuits/node_modules",
+    "build:all": "bun run circuits:compile && bun run build",
+    "dev:all": "concurrently \"bun run api:dev\" \"bun run dev\"",
+    "install:all": "bun install && bun install --cwd api && bun install --cwd nextjs && bun install --cwd circuits",
+    "contract:install": "cd contract && bun install",
+    "contract:compile": "cd contract && bun run compile",
+    "contract:test": "cd contract && bun run test",
+    "contract:deploy": "cd contract && bun run deploy"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.47.0",
+    "prettier": "^3.0.2",
+    "jest": "^29.6.4",
+    "supertest": "^6.3.3",
+    "playwright": "^1.37.0",
+    "@types/node": "^20.5.4",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "axios": "^1.5.0",
+    "chalk": "^5.3.0",
+    "circomlib": "2.0.5",
+    "dotenv": "^16.3.1",
+    "ora": "^7.0.1"
+  },
+  "keywords": [
+    "zkverify",
+    "randomness",
+    "oracle",
+    "zk-proofs",
+    "multichain",
+    "ethereum",
+    "base",
+    "polygon"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/zkrandom-engine.git"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  }
+}
